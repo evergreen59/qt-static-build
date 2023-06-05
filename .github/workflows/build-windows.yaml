@@ -20,13 +20,37 @@ jobs:
         runs-on: windows-2019
 
         steps:
-            - name: Build
-              uses: anthepro/install-qt-static@v1
+            - name: Set up Visual Studio shell on Windows
+              uses: egor-tensin/vs-shell@v2
               with:
-                version: ${{inputs.version}}
-                configure-args: ${{inputs.configure-args}}
-                submodules: ${{inputs.modules}}
-                dir: "C:/qt-static"
+                  arch: x64
+            
+            - name: Setup Environment
+              working-directory: "C:/"
+              shell: pwsh
+              run: |
+                mkdir C:/qt-source
+                choco install -y jom
+            
+            - name: Download Qt
+              working-directory: "C:/"
+              shell: pwsh
+              run: | 
+                git clone https://github.com/qt/qt5.git C:/qt-source
+                cd qt-source
+                git checkout v${{ inputs.version }}
+                perl init-repository --module-subset=${{ inputs.modules }}                
+
+            - name: Build
+              working-directory: "C:/qt-source"
+              shell: pwsh
+              run: |
+                mkdir build
+                cd build
+                ../configure -release -opensource -confirm-license -platform win32-msvc ${{ inputs.configure-args }} -prefix "C:\qt-static"
+                jom
+                jom install
+
             - uses: actions/upload-artifact@v3
               with:
                   name: my-artifact
