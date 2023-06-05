@@ -1,0 +1,34 @@
+name: Build
+on:
+    workflow_dispatch:
+        inputs:
+            version:
+                description: 'Build version'
+                required: true
+                type: string
+            configure-args:
+                description: 'Build args'
+                required: true
+                type: string
+            modules:
+                description: 'Build modules'
+                required: true
+                type: string
+jobs:
+    build:
+        name: Build
+        runs-on: ${{ matrix.os }}
+        strategy:
+            matrix:
+              os: [ windows-2019, ubuntu-22.04 ]
+        steps:
+            - name: Build
+              uses: anthepro/install-qt-static@v1
+              with:
+                version: ${{inputs.version}}
+                configure-args: ${{inputs.configure-args}}
+                submodules: ${{inputs.modules}}
+            - uses: actions/upload-artifact@v3
+              with:
+                  name: my-artifact
+                  path: qt/build
