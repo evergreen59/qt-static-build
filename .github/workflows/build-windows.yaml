@@ -17,10 +17,8 @@ on:
 jobs:
     build:
         name: Build
-        runs-on: ${{ matrix.os }}
-        strategy:
-            matrix:
-              os: [ windows-2019, ubuntu-22.04 ]
+        runs-on: windows-2019
+
         steps:
             - name: Build
               uses: anthepro/install-qt-static@v1
@@ -28,7 +26,8 @@ jobs:
                 version: ${{inputs.version}}
                 configure-args: ${{inputs.configure-args}}
                 submodules: ${{inputs.modules}}
+                dir: "C:/qt-static"
             - uses: actions/upload-artifact@v3
               with:
                   name: my-artifact
-                  path: qt/build
+                  path: "C:/qt-static"
