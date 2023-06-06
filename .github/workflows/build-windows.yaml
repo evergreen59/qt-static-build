@@ -49,7 +49,7 @@ jobs:
                 cd qt-source
                 git checkout v${{ inputs.version }}
                 perl init-repository --module-subset=${{ inputs.modules }}
-                sed -i s/-MD/-MT/g qt-base/mkspecs/common/msvc-desktop.conf
+                sed -i s/-MD/-MT/g qtbase/mkspecs/common/msvc-desktop.conf
 
             - name: Build
               working-directory: "C:/qt-source"
