@@ -39,7 +39,7 @@ jobs:
               shell: pwsh
               run: |
                 mkdir C:/qt-source
-                choco install -y jom
+                choco install -y jom sed
             
             - name: Download Qt
               working-directory: "C:/"
@@ -48,7 +48,8 @@ jobs:
                 git clone https://github.com/qt/qt5.git C:/qt-source
                 cd qt-source
                 git checkout v${{ inputs.version }}
-                perl init-repository --module-subset=${{ inputs.modules }}                
+                perl init-repository --module-subset=${{ inputs.modules }}
+                sed -i s/-MD/-MT/g qt-base/mkspecs/common/msvc-desktop.conf
 
             - name: Build
               working-directory: "C:/qt-source"
@@ -68,4 +69,4 @@ jobs:
 
             - uses: actions/upload-artifact@v3
               with:
-                  path: "D:/*.7z"
+                  path: "D:/qt-${{inputs.version}}-${{inputs.arch}}-static.7z"
