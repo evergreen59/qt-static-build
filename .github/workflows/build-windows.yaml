@@ -15,7 +15,7 @@ on:
                 description: 'Build modules'
                 required: true
                 type: string
-                default: 'qtbase'
+                default: 'default'
             arch:
                 description: 'Build arch'
                 type: choice
