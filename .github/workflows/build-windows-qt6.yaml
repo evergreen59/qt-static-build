@@ -1,4 +1,4 @@
-name: Build
+name: Build Qt6 Windows
 on:
     workflow_dispatch:
         inputs:
@@ -6,7 +6,7 @@ on:
                 description: 'Build version'
                 required: true
                 type: string
-                default: '5.15.2'
+                default: '6.2.4'
             configure-args:
                 description: 'Build args'
                 required: true
@@ -57,9 +57,9 @@ jobs:
               run: |
                 mkdir build
                 cd build
-                ../configure -release -opensource -confirm-license -platform win32-msvc ${{ inputs.configure-args }} -prefix "C:\qt-static"
-                jom
-                jom install
+                ..\configure.bat -release -opensource -confirm-license -platform win32-msvc ${{ inputs.configure-args }} -prefix "C:\qt-static"
+                cmake --build . --parallel 4
+                cmake --install .
 
             - name: Package output files
               working-directory: "D:/"
